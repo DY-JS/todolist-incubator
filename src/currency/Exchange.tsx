@@ -29,7 +29,6 @@ export const Exchange = () => {
                 return;
             }
         }
-
     }
 
     return (
