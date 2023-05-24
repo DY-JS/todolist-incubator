@@ -11,6 +11,7 @@ export function CurrencyFilter({chooseCurrency, filter}: FilterProps) {
 
     return (
         <>
+          
             <Button chooseCurrency={chooseCurrency} filter={filter} title={Currencies.RUBLS}/>
             <Button chooseCurrency={chooseCurrency} filter={filter} title={Currencies.Dollars}/>
         </>
