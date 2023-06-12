@@ -2,7 +2,6 @@ import React, {ChangeEvent, MouseEvent, useState} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {Exchange} from "./currency/Exchange";
-import {FullInput} from "./UI/Fullinput";
 import {Input} from "./UI/Input";
 import {Button} from "./UI/Button";
 import { v4 as uuidv4 } from 'uuid';
@@ -24,9 +23,8 @@ function App() {
     const [filter, setFilter] = useState<FilterType>('all')
     const [tasks, setTasks] = useState(initTasks)
     const [title, setTitle] = useState('')
+    const [error, setError] = useState<string|null>(null)
     const tableTitle = 'What to learn';
-
-    console.log(tasks)
 
     const removeTask = (id: string) => {
         let filteredTasks = tasks.filter(t => t.id !== id)
@@ -34,13 +32,7 @@ function App() {
     }
 
     const addTask = (title: string) => {
-        // const ids = tasks.reduce((acc: number[], t:TaskType) => {
-        //     acc.push(t.id)
-        //     return acc
-        // },[] )
-
         const newTask: TaskType = {
-            //id: Math.max(...ids) + 1,
             id: uuidv4(),
             title: title,
             isDone: false
@@ -52,8 +44,13 @@ function App() {
         if (title.trim() !== '') {
             addTask(title);
             setTitle("");
-        }
+            setError(null)
+        } else {setError('Title is required')}
     };
+
+    const changeIsDone = (id: string, isDone: boolean) =>{
+      setTasks(tasks.map(t => t.id === id ? {...t, isDone: isDone} : t))
+    }
 
     const changeFilter = (value: FilterType) => {
         setFilter(value)
@@ -70,13 +67,23 @@ function App() {
 
 return (
     <>
-        <Input title={title} setTitle={setTitle}  onEnterAction={handleAddTask} />
+        <Input
+            title={title}
+            setTitle={setTitle}
+            inputStyle={error !==null ? 'error' : ''}
+            // error={error}
+            // setError={setError}
+            onEnterPress={handleAddTask}
+        />
         <Button callback={handleAddTask} name={"➕"} />
+        {error && <p className='errorMessage'>{error}</p>}
         <Todolist
             title={tableTitle}
+            filter={filter}
             tasks={filteredTasks}
             removeTask={removeTask}
             changeFilter={changeFilter}
+            changeIsDone={changeIsDone}
         />
         <Exchange/>
     </>

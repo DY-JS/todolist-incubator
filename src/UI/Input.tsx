@@ -1,29 +1,33 @@
 import { ChangeEvent, KeyboardEvent } from "react";
+import s from '../Input.module.css'
 
 type PropsType = {
     title: string,
+    inputStyle?: string
     setTitle: (title: string) => void;
-    onEnterAction?: () => void
+    onEnterPress?: () => void
 };
 
-export const Input = ({ title, setTitle, onEnterAction }: PropsType) => {
+export const Input = ({ title, setTitle, inputStyle, onEnterPress }: PropsType) => {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value);
     };
 
-    const keyHandle = (e: KeyboardEvent) => {
-        if(e.key === 'Enter' && onEnterAction) {
-          onEnterAction()
+    const handleKeyPress = (e: KeyboardEvent) => {
+        if(e.key === 'Enter' && onEnterPress) {
+          onEnterPress()
         }
     }
 
     return (
         <>
             <input
+                className={inputStyle}
                 onChange={handleChange}
-                onKeyPress={keyHandle}
-                value={title} />
+                onKeyPress={handleKeyPress}
+                value={title}
+            />
         </>
     );
 };
