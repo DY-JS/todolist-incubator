@@ -5,6 +5,7 @@ import {Exchange} from "./currency/Exchange";
 import {Input} from "./UI/Input";
 import {Button} from "./UI/Button";
 import { v4 as uuidv4 } from 'uuid';
+import RatingContainer from "./Rating/RatingContainer";
 
 export type FilterType = 'all' | 'active' | 'completed';
 export type TaskType = {
@@ -48,6 +49,12 @@ function App() {
         } else {setError('Title is required')}
     };
 
+    const onBlurError = () => {
+        if (title.trim() === '') {
+            setError('Title is required')
+        }
+    }
+
     const changeIsDone = (id: string, isDone: boolean) =>{
       setTasks(tasks.map(t => t.id === id ? {...t, isDone: isDone} : t))
     }
@@ -72,7 +79,7 @@ return (
             setTitle={setTitle}
             inputStyle={error !==null ? 'error' : ''}
             // error={error}
-            // setError={setError}
+            onBlurError={onBlurError}
             onEnterPress={handleAddTask}
         />
         <Button callback={handleAddTask} name={"➕"} />
@@ -86,6 +93,7 @@ return (
             changeIsDone={changeIsDone}
         />
         <Exchange/>
+        <RatingContainer/>
     </>
 
 );

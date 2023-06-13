@@ -6,9 +6,10 @@ type PropsType = {
     inputStyle?: string
     setTitle: (title: string) => void;
     onEnterPress?: () => void
+    onBlurError: () => void
 };
 
-export const Input = ({ title, setTitle, inputStyle, onEnterPress }: PropsType) => {
+export const Input = ({ title, setTitle, inputStyle, onEnterPress, onBlurError }: PropsType) => {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value);
@@ -27,6 +28,7 @@ export const Input = ({ title, setTitle, inputStyle, onEnterPress }: PropsType) 
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 value={title}
+                onBlur={onBlurError}
             />
         </>
     );
