@@ -1,3 +1,22 @@
 .activeFilter{
     background-color: aquamarine;
 }
+
+.error {
+    border: red 1px solid;
+}
+
+.errorMessage {
+    color: red;
+}
+
+.isDone {
+    opacity: 0.5;
+}
+
+
+
+.title {
+    display: inline-block;
+}
+

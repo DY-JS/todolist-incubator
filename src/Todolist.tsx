@@ -6,20 +6,38 @@ import styles from './Todolist.module.css'
 import {Input} from "./UI/Input";
 
 type PropsType = {
-    title: string
+    listId: string
+    listTitle: string
     filter: FilterType
     tasks: TaskType[]
-    removeTask: Function
+    addTask: (title: string, todoListId: string) => void
+    removeTask: (title: string, todoListId: string) => void
     changeFilter: Function
-    changeIsDone: (id: string, isDone: boolean) => void
+    changeIsDone: (id: string, isDone: boolean, todoListId: string) => void
+    removeTodoList: (listId: string) => void
 }
 
-export const Todolist = (props: PropsType) => {
+export const Todolist: FC<PropsType> = ({listId, listTitle, filter,tasks, addTask, removeTask, changeFilter, changeIsDone, removeTodoList}) => {
+    const [title, setTitle] = useState('')
+    const [error, setError] = useState<string | null>(null)
 
-    const handleRemoveTask =(id: string) => {
-        props.removeTask(id)
+    const handleAddTask = (listId: string) => {
+        if (title.trim() !== '') {
+            addTask(title, listId );
+            setTitle("");
+            setError(null)
+        } else {
+            setError('Title is required')
+        }
+    };
+
+    const onBlurError = () => {
+        if (title.trim() === '') {
+            setError('Title is required')
+        }
     }
-    const  handlechangeFilter = (filter: FilterType) =>  props.changeFilter(filter);
+
+    const  handlechangeFilter = (filter: FilterType, id:string) => changeFilter(filter, id);
     // const  handlechangeActiveFilter = () =>  props.changeFilter('active');
     // const  handlechangeCompletedFilter = () =>  props.changeFilter('completed');
     // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,26 +45,39 @@ export const Todolist = (props: PropsType) => {
     // }
 
     return (
-        <div className="App">
+
             <div>
+                <div>
+                    <h2 className={styles.title}>{listTitle}</h2>
+                    <Button callback={() => removeTodoList(listId)} name={"❌"}/>
+                </div>
+                <Input
+                    title={title}
+                    setTitle={setTitle}
+                    inputStyle={error !== null ? 'error' : ''}
+                    // error={error}
+                    onBlurError={onBlurError}
+                    onEnterPress={() => handleAddTask(listId)}
+                />
+                <Button callback={() => handleAddTask(listId)} name={"➕"}/>
+                {error && <p className={styles.errorMessage}>{error}</p>}
+
                 <ul>
-                    {props.tasks.map(task => {
+                    {tasks.map(task => {
                         return(
                             <li className={task.isDone ? 'isDone' : ''} key={task.title}>
-                                <Checkbox checked={task.isDone} callback={(isDone: boolean) => props.changeIsDone(task.id, isDone)}/>
+                                <Checkbox checked={task.isDone} callback={(isDone: boolean) => changeIsDone(task.id, isDone, listId)}/>
                             <span>{task.title}</span>
-                            {/*<button onClick={() => handleRemoveTask(task.id)}>❌</button>*/}
-                                <Button callback={() => handleRemoveTask(task.id)} name={"❌"}/>
+                                <Button callback={() => removeTask(task.id, listId)} name={"❌"}/>
                             </li>
                         )}
                     )}
                 </ul>
                 <div>
-                    <Button buttonStyle={props.filter==='all' ? styles.activeFilter: ''} callback={() => handlechangeFilter('all')} name="All"/>
-                    <Button buttonStyle={props.filter==='active' ? styles.activeFilter: ''} callback={() => handlechangeFilter('active')} name="Active"/>
-                    <Button buttonStyle={props.filter==='completed' ? styles.activeFilter: ''} callback={() => handlechangeFilter('completed')} name="Completed"/>
+                    <Button buttonStyle={filter==='all' ? styles.activeFilter: ''} callback={() => handlechangeFilter('all', listId)} name="All"/>
+                    <Button buttonStyle={filter==='active' ? styles.activeFilter: ''} callback={() => handlechangeFilter('active', listId)} name="Active"/>
+                    <Button buttonStyle={filter==='completed' ? styles.activeFilter: ''} callback={() => handlechangeFilter('completed', listId)} name="Completed"/>
                 </div>
             </div>
-        </div>
     );
 }
