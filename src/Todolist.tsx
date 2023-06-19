@@ -14,8 +14,6 @@ type PropsType = {
     changeIsDone: (id: string, isDone: boolean) => void
 }
 
-
-//export const Todolist = ({ truck,  truck2, truck3, tasks}: PropsType) => {
 export const Todolist = (props: PropsType) => {
 
     const handleRemoveTask =(id: string) => {
