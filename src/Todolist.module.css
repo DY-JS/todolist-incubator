@@ -2,6 +2,16 @@
     background-color: aquamarine;
 }
 
+.todolist {
+    display: inline-block;
+    width: max-content;
+    min-width: 20vw;
+    border: #bebebe 1px solid;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 15px;
+}
+
 .error {
     border: red 1px solid;
 }

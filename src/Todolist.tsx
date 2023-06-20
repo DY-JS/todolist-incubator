@@ -45,8 +45,7 @@ export const Todolist: FC<PropsType> = ({listId, listTitle, filter,tasks, addTas
     // }
 
     return (
-
-            <div>
+            <div className={styles.todolist}>
                 <div>
                     <h2 className={styles.title}>{listTitle}</h2>
                     <Button callback={() => removeTodoList(listId)} name={"❌"}/>
@@ -54,18 +53,18 @@ export const Todolist: FC<PropsType> = ({listId, listTitle, filter,tasks, addTas
                 <Input
                     title={title}
                     setTitle={setTitle}
-                    inputStyle={error !== null ? 'error' : ''}
+                    inputStyle={error !== null && title.length === 0 ? styles.error : ''}
                     // error={error}
                     onBlurError={onBlurError}
                     onEnterPress={() => handleAddTask(listId)}
                 />
                 <Button callback={() => handleAddTask(listId)} name={"➕"}/>
-                {error && <p className={styles.errorMessage}>{error}</p>}
+                {error && !title.length && <p className={styles.errorMessage}>{error}</p>}
 
                 <ul>
                     {tasks.map(task => {
                         return(
-                            <li className={task.isDone ? 'isDone' : ''} key={task.title}>
+                            <li className={task.isDone ? styles.isDone : ''} key={task.title}>
                                 <Checkbox checked={task.isDone} callback={(isDone: boolean) => changeIsDone(task.id, isDone, listId)}/>
                             <span>{task.title}</span>
                                 <Button callback={() => removeTask(task.id, listId)} name={"❌"}/>

@@ -1,11 +1,9 @@
 import React, {ChangeEvent, MouseEvent, useState} from 'react';
-import './App.css';
 import {Todolist} from "./Todolist";
 import {Exchange} from "./currency/Exchange";
-import {Input} from "./UI/Input";
-import {Button} from "./UI/Button";
 import {v4 as uuidv4} from 'uuid';
 import RatingContainer from "./Rating/RatingContainer";
+import AddTodoList from "./AddTodoList";
 
 export type FilterType = 'all' | 'active' | 'completed';
 export type TaskType = {
@@ -48,12 +46,24 @@ function App() {
         ]
     }
 
+    const [allTasks, setAllTasks] = useState<TaskStateType>(initTasks)
+
+    const addTodoList = (title: string) => {
+        const newTodoList: TodoListType = {
+            id: uuidv4(),
+            title,
+            filter: "all"
+        }
+
+        setTodoLists([newTodoList, ...todoLists ])
+        setAllTasks({...allTasks, [newTodoList.id]: []})
+
+    }
+
     const removeTodoList = (listId: string) => {
         setTodoLists(todoLists.filter(tl => tl.id !== listId ))
         delete allTasks[listId]
     }
-
-    const [allTasks, setAllTasks] = useState<TaskStateType>(initTasks)
 
     const removeTask = (id: string, todoListId: string) => {
         const tasks = allTasks[todoListId]
@@ -92,6 +102,7 @@ function App() {
 
     return (
         <>
+            <AddTodoList addTodoList={addTodoList}/>
             {
                 todoLists.map(tl => {
                     let filteredTasks = allTasks[tl.id];
@@ -118,7 +129,6 @@ function App() {
                     )
                 })
             }
-
 
             <Exchange/>
             <RatingContainer/>
