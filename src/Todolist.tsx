@@ -17,13 +17,14 @@ type PropsType = {
     changeFilter: Function
     changeIsDone: (id: string, isDone: boolean, todoListId: string) => void
     updateTaskTitle: (id: string, title: string, todoListId: string) => void
+    updateListTitle: (listTitle: string, todoListId: string) => void
     removeTodoList: (listId: string) => void
 }
 
 export const Todolist: FC<PropsType> = ({listId,
                                             listTitle, filter,tasks,
-                                            addTask, removeTask, changeFilter,
-                                            changeIsDone, updateTaskTitle, removeTodoList}) => {
+                                            addTask, removeTask, changeFilter,changeIsDone,
+                                            updateTaskTitle, updateListTitle, removeTodoList}) => {
     const [title, setTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
 
@@ -48,10 +49,12 @@ export const Todolist: FC<PropsType> = ({listId,
         handleAddTask(listId,title)
     }
 
+
     return (
             <div className={styles.todolist}>
-                <div>
-                    <h2 className={styles.title}>{listTitle}</h2>
+                <div className={styles.listTitle}>
+                    {/*<h2 className={styles.title}>{listTitle}</h2>*/}
+                    <EditableTitle title={listTitle} updateTitle={(title:string) => updateListTitle(title, listId)}/>
                     <Button callback={() => removeTodoList(listId)} name={"❌"}/>
                 </div>
                 <Input
@@ -68,7 +71,7 @@ export const Todolist: FC<PropsType> = ({listId,
                         return(
                             <li className={task.isDone ? styles.isDone : ''} key={uuidv4()}>
                                 <Checkbox checked={task.isDone} callback={(isDone: boolean) => changeIsDone(task.id, isDone, listId)}/>
-                                <EditableTitle title={task.title} updateTaskTitle={(title: string) => updateTaskTitle(task.id, title, listId)}/>
+                                <EditableTitle title={task.title} updateTitle={(title: string) => updateTaskTitle(task.id, title, listId)}/>
                                 <Button callback={() => removeTask(task.id, listId)} name={"❌"}/>
                             </li>
                         )}

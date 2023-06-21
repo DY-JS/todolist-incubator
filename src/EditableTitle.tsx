@@ -3,12 +3,12 @@ import {Input} from "./UI/Input";
 
 type EditableProps = {
     title: string;
-    updateTaskTitle: (title: string) => void
+    updateTitle: (title: string) => void
 }
 
-const EditableTitle:FC<EditableProps> = ({title, updateTaskTitle}) => {
-    const[editMode, setEditMode] = useState(false)
-    const[newTitle, setNewTitle] = useState('')
+const EditableTitle: FC<EditableProps> = ({title, updateTitle}) => {
+    const [editMode, setEditMode] = useState(false)
+    const [newTitle, setNewTitle] = useState('')
 
     const activateEditMode = () => {
         setEditMode(true)
@@ -17,19 +17,19 @@ const EditableTitle:FC<EditableProps> = ({title, updateTaskTitle}) => {
 
     const activateViewMode = () => {
         setEditMode(false)
-        updateTaskTitle(newTitle)
+        updateTitle(newTitle)
     }
 
     return (editMode
-        ? <Input
-            title={newTitle}
-            setTitle={setNewTitle}
-            onBlur={activateViewMode}
-            onEnterPress={activateViewMode}
-autoFocus={true}
+            ? <Input
+                title={newTitle}
+                setTitle={setNewTitle}
+                onBlur={activateViewMode}
+                onEnterPress={activateViewMode}
+                autoFocus={true}
             />
-        : <div onDoubleClick={activateEditMode}>{title}</div>
-);
+            : <div onDoubleClick={activateEditMode}>{title}</div>
+    );
 };
 
 export default EditableTitle;

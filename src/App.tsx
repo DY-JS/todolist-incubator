@@ -60,6 +60,11 @@ function App() {
 
     }
 
+    const updateListTitle = (title: string, listId: string) => {
+        const newTodoList = todoLists.map(list => list.id === listId ? {...list, title} : list )
+        setTodoLists(newTodoList)
+    }
+
     const removeTodoList = (listId: string) => {
         setTodoLists(todoLists.filter(tl => tl.id !== listId ))
         delete allTasks[listId]
@@ -131,6 +136,7 @@ function App() {
                         removeTask={removeTask}
                         changeFilter={changeFilter}
                         changeIsDone={changeIsDone}
+                        updateListTitle={updateListTitle}
                         updateTaskTitle={updateTaskTitle}
                         removeTodoList={removeTodoList}
                     />
