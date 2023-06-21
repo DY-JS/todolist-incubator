@@ -1,9 +1,11 @@
-import React, {ChangeEvent, FC, MouseEventHandler, useState} from "react";
+import React, {ChangeEvent, FC, MouseEventHandler, useEffect, useState} from "react";
 import {TaskType, FilterType} from "./App";
 import {Button} from "./UI/Button";
 import {Checkbox} from "./UI/Checkbox";
 import styles from './Todolist.module.css'
 import {Input} from "./UI/Input";
+import EditableTitle from "./EditableTitle";
+import {v4 as uuidv4} from 'uuid';
 
 type PropsType = {
     listId: string
@@ -14,28 +16,26 @@ type PropsType = {
     removeTask: (title: string, todoListId: string) => void
     changeFilter: Function
     changeIsDone: (id: string, isDone: boolean, todoListId: string) => void
+    updateTaskTitle: (id: string, title: string, todoListId: string) => void
     removeTodoList: (listId: string) => void
 }
 
-export const Todolist: FC<PropsType> = ({listId, listTitle, filter,tasks, addTask, removeTask, changeFilter, changeIsDone, removeTodoList}) => {
+export const Todolist: FC<PropsType> = ({listId,
+                                            listTitle, filter,tasks,
+                                            addTask, removeTask, changeFilter,
+                                            changeIsDone, updateTaskTitle, removeTodoList}) => {
     const [title, setTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
 
-    const handleAddTask = (listId: string) => {
+    const handleAddTask = (listId: string,title:string) => {
         if (title.trim() !== '') {
             addTask(title, listId );
-            setTitle("");
             setError(null)
+        setTitle('')
         } else {
             setError('Title is required')
         }
     };
-
-    const onBlurError = () => {
-        if (title.trim() === '') {
-            setError('Title is required')
-        }
-    }
 
     const  handlechangeFilter = (filter: FilterType, id:string) => changeFilter(filter, id);
     // const  handlechangeActiveFilter = () =>  props.changeFilter('active');
@@ -43,6 +43,10 @@ export const Todolist: FC<PropsType> = ({listId, listTitle, filter,tasks, addTas
     // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     //    props.changeIsDone(e.currentTarget.id, e.currentTarget.checked )
     // }
+
+    const addTacksWrapper =()=>{
+        handleAddTask(listId,title)
+    }
 
     return (
             <div className={styles.todolist}>
@@ -54,19 +58,17 @@ export const Todolist: FC<PropsType> = ({listId, listTitle, filter,tasks, addTas
                     title={title}
                     setTitle={setTitle}
                     inputStyle={error !== null && title.length === 0 ? styles.error : ''}
-                    // error={error}
-                    onBlurError={onBlurError}
-                    onEnterPress={() => handleAddTask(listId)}
+                    onEnterPress={addTacksWrapper}
                 />
-                <Button callback={() => handleAddTask(listId)} name={"➕"}/>
+                <Button callback={addTacksWrapper} name={"➕"}/>
                 {error && !title.length && <p className={styles.errorMessage}>{error}</p>}
 
                 <ul>
                     {tasks.map(task => {
                         return(
-                            <li className={task.isDone ? styles.isDone : ''} key={task.title}>
+                            <li className={task.isDone ? styles.isDone : ''} key={uuidv4()}>
                                 <Checkbox checked={task.isDone} callback={(isDone: boolean) => changeIsDone(task.id, isDone, listId)}/>
-                            <span>{task.title}</span>
+                                <EditableTitle title={task.title} updateTaskTitle={(title: string) => updateTaskTitle(task.id, title, listId)}/>
                                 <Button callback={() => removeTask(task.id, listId)} name={"❌"}/>
                             </li>
                         )}

@@ -33,7 +33,7 @@ const AddTodoList: FC<IProps> = ({addTodoList}) => {
                     title={title}
                     inputStyle={error !== null && title.length === 0 ? styles.error : ''}
                     setTitle={setTitle}
-                    onBlurError={onBlurError}/>
+                    onBlur={onBlurError}/>
                 <Button callback={handleAddTodoList} name={'Add TodoList'}/>
             </div>
             {error && !title.length && <p className={styles.errorMessage}>{error}</p>}

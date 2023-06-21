@@ -86,8 +86,15 @@ function App() {
 
     const changeIsDone = (id: string, isDone: boolean, todoListId: string) => {
         let tasks = allTasks[todoListId]
-        const udatedTasks = tasks.map(t => t.id === id ? {...t, isDone: isDone} : t)
-        allTasks[todoListId] = udatedTasks
+        const updatedTasks = tasks.map(t => t.id === id ? {...t, isDone: isDone} : t)
+        allTasks[todoListId] = updatedTasks
+        setAllTasks({...allTasks})
+    }
+
+    const updateTaskTitle = (id: string, title: string, todoListId: string) => {
+        let tasks = allTasks[todoListId]
+        const updatedTasks = tasks.map(t => t.id === id ? {...t, title} : t)
+        allTasks[todoListId] = updatedTasks
         setAllTasks({...allTasks})
     }
 
@@ -124,12 +131,12 @@ function App() {
                         removeTask={removeTask}
                         changeFilter={changeFilter}
                         changeIsDone={changeIsDone}
+                        updateTaskTitle={updateTaskTitle}
                         removeTodoList={removeTodoList}
                     />
                     )
                 })
             }
-
             <Exchange/>
             <RatingContainer/>
         </>
